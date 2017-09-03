@@ -13,13 +13,8 @@ import fr.fstaine.theball.physic.Bonus;
 public class GameEngine {
 	private final Ball ball;
 	private final Bonus bonus;
-
-	private GameActivity mActivity;
-	private SensorManager mManager;
-	private Sensor mAccelerometer;
-
-	SensorEventListener mSensorEventListener = new SensorEventListener() {
-		@Override
+    private SensorEventListener mSensorEventListener = new SensorEventListener() {
+        @Override
 		public void onSensorChanged(SensorEvent pEvent) {
 			float x = pEvent.values[0];
 			float y = pEvent.values[1];
@@ -31,6 +26,9 @@ public class GameEngine {
 		public void onAccuracyChanged(Sensor pSensor, int pAccuracy) {
 		}
 	};
+    private GameActivity mActivity;
+    private SensorManager mManager;
+    private Sensor mAccelerometer;
 
 	public GameEngine(GameActivity pView, Ball b, final Bonus bonus)
 	{
@@ -45,9 +43,11 @@ public class GameEngine {
 		new Thread() {
 			public void run(){
 				while(true) {
-					if (ball.getPosition().distance(bonus.getPosition()) < 2 * ball.getRadius()) {
-						bonus.setRandomPosition();
-					}
+                    if (isOnBonus()) {
+                        ball.catchBall();
+                        mActivity.updateScore(ball.getScore());
+                        bonus.setRandomPosition();
+                    }
 					try {
 						Thread.currentThread().sleep(20);
 					} catch (InterruptedException e) {
@@ -56,7 +56,6 @@ public class GameEngine {
 				}
 			}
 		}.start();
-
 	}
 
 	// Arrête le capteur
@@ -68,5 +67,9 @@ public class GameEngine {
 	public void resume() {
 		mManager.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 	}
+
+    private boolean isOnBonus() {
+        return ball.getPosition().distance(bonus.getPosition()) < 2 * ball.getRadius();
+    }
 
 }

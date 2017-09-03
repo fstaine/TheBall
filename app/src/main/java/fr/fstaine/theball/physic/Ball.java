@@ -1,5 +1,7 @@
 package fr.fstaine.theball.physic;
 
+import android.util.Log;
+
 public class Ball {
 	private final int radius = 30;
 	private final float dimi = 5f;
@@ -9,6 +11,8 @@ public class Ball {
 	private Pt screenSize;
 	private Pt pos;
 	private Pt speed;
+
+    private int score = 0;
 
 	public Ball(int sizeX, int sizeY)
 	{
@@ -91,4 +95,17 @@ public class Ball {
 		setPosX(pos.x + speed.x);
 		setPosY(pos.y + speed.y);
 	}
+
+    /**
+     * Called when the player caught a ball
+     */
+    public void catchBall() {
+        // TODO: set 10 as a param
+        score += 10;
+        Log.d("Score", "Got a ball");
+    }
+
+    public int getScore() {
+        return score;
+    }
 }
