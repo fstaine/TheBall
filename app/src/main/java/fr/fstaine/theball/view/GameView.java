@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.TextView;
 
 import fr.fstaine.theball.physic.Ball;
 import fr.fstaine.theball.physic.Bonus;
@@ -23,8 +22,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Bonus mBonus;
 
     private boolean keepDrawing = true;
-
-    private TextView mTextScore;
 
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -44,7 +41,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private void init() {
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
-        mThread = new Thread(this);
         mPaint = new Paint();
 
         mBall = new Ball(this.getHeight(), this.getWidth());
@@ -74,6 +70,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 	@Override
 	public void surfaceCreated(SurfaceHolder pHolder) {
         keepDrawing = true;
+        mThread = new Thread(this);
         mThread.start();
     }
 
@@ -88,8 +85,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     }
 
 	@Override
-	public void surfaceDestroyed(SurfaceHolder pHolder)
-	{
+    public void surfaceDestroyed(SurfaceHolder pHolder) {
         keepDrawing = false;
         boolean retry = true;
         while (retry) {
