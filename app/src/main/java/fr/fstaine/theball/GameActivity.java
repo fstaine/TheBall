@@ -3,21 +3,16 @@ package fr.fstaine.theball;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import fr.fstaine.theball.controller.GameEngine;
-import fr.fstaine.theball.view.GameView;
 
-public class GameActivity extends AppCompatActivity {
-
-    GameEngine gameEngine;
-
-    GameView gameView;
-    TextView mTextScore;
+public class GameActivity extends AppCompatActivity implements GameFragment.OnGameFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,23 +22,25 @@ public class GameActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        mTextScore = (TextView) findViewById(R.id.textScore);
-        gameView = (GameView) findViewById(R.id.gameView);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        gameEngine = new GameEngine(this, gameView.getBall(), gameView.getBonus());
+        // TODO: Get level
+        GameFragment gameFragment = GameFragment.newInstance(GameEngine.GameLevel.MEDIUM);
+
+        fragmentTransaction.add(R.id.game_fragment_container, gameFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        gameEngine.resume();
-        gameEngine.updateGameParams();
+        // Fragment call ?
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        gameEngine.stop();
     }
 
     @Override
@@ -65,13 +62,30 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public void updateScore(final int score) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mTextScore.setText("" + score);
-            }
-        });
+    //////////////////////////////
+    @Override
+    public void onGameStart() {
+
     }
 
+    @Override
+    public void onGamePause() {
+
+    }
+
+    @Override
+    public void onGameResume() {
+
+    }
+
+    @Override
+    public void onGameEnd() {
+
+    }
+
+    @Override
+    public void onBonusCaught(int reward) {
+
+    }
+    ////////////////////////////////
 }

@@ -9,7 +9,7 @@ import android.hardware.SensorManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import fr.fstaine.theball.GameActivity;
+import fr.fstaine.theball.GameFragment;
 import fr.fstaine.theball.physic.Ball;
 import fr.fstaine.theball.physic.Bonus;
 
@@ -17,7 +17,12 @@ public class GameEngine {
 
 	private final Ball ball;
 	private final Bonus bonus;
+    private GameFragment mContainer;
+    // TODO: Put reward in Bonus ?
     private int reward;
+
+    private SensorManager mManager;
+    private Sensor mAccelerometer;
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
         @Override
 		public void onSensorChanged(SensorEvent pEvent) {
@@ -31,41 +36,40 @@ public class GameEngine {
 		public void onAccuracyChanged(Sensor pSensor, int pAccuracy) {
 		}
 	};
-    private GameActivity mActivity;
-    private SensorManager mManager;
-    private Sensor mAccelerometer;
-	public GameEngine(GameActivity pView, Ball b, final Bonus bonus)
-	{
-        this.mActivity = pView;
+
+    private Thread mEventThread = new Thread() {
+        public void run() {
+            while (true) {
+                if (isOnBonus()) {
+                    ball.incrementScore(reward);
+                    mContainer.updateScore(ball.getScore());
+                    bonus.setRandomPosition();
+                }
+                try {
+                    Thread.currentThread().sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    public GameEngine(GameFragment pView, Ball b, final Bonus bonus) {
+        this.mContainer = pView;
         this.ball = b;
 		this.bonus = bonus;
 
         updateGameParams();
 
-		mManager = (SensorManager) mActivity.getBaseContext().getSystemService(Service.SENSOR_SERVICE);
-		mAccelerometer = mManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mManager = (SensorManager) mContainer.getActivity().getBaseContext().getSystemService(Service.SENSOR_SERVICE);
+        mAccelerometer = mManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mManager.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 
-		new Thread() {
-			public void run(){
-				while(true) {
-                    if (isOnBonus()) {
-                        ball.incrementScore(reward);
-                        mActivity.updateScore(ball.getScore());
-                        bonus.setRandomPosition();
-                    }
-					try {
-						Thread.currentThread().sleep(20);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();
-	}
+        mEventThread.start();
+    }
 
     public void updateGameParams() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContainer.getContext());
         Log.d("Pref", sharedPref.getString("game_level", "0"));
         int gameLevel = Integer.decode(sharedPref.getString("game_level", "0"));
 
@@ -95,7 +99,7 @@ public class GameEngine {
         return ball.getPosition().distance(bonus.getPosition()) < 2 * ball.getRadius();
     }
 
-    private final static class GameLevel {
+    public final static class GameLevel {
         public final static int EASY = 0;
         public final static int MEDIUM = 1;
         public final static int HARD = 2;
