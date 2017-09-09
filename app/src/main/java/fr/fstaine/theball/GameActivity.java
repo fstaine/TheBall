@@ -37,6 +37,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         gameEngine.resume();
+        gameEngine.updateGameParams();
     }
 
     @Override

@@ -1,12 +1,11 @@
 package fr.fstaine.theball.physic;
 
-import android.util.Log;
-
 public class Ball {
 	private final int radius = 30;
-	private final float dimi = 5f;
-	private final float maxSpeed = 20f;
-	private final float bounceReduction = 0.2f;
+
+    private float speedFactor = 0.2f;
+    private float maxSpeed = 20f;
+    private float bounceReduction = 0.2f;
 
 	private Pt screenSize;
 	private Pt pos;
@@ -20,6 +19,12 @@ public class Ball {
 		pos = new Pt(sizeX/2, sizeY/2);
 		speed = new Pt(0f, 0f);
 	}
+
+    public void setParams(float speedFactor, float maxSpeed, float bounceReduction) {
+        this.speedFactor = speedFactor;
+        this.maxSpeed = maxSpeed;
+        this.bounceReduction = bounceReduction;
+    }
 
 	public Pt getPosition() {
 		return pos;
@@ -80,14 +85,14 @@ public class Ball {
 	}
 
 	public void setAcceleration(float pX, float pY) {
-		speed.x -= pX / dimi;
-		if(speed.x > maxSpeed)
+        speed.x -= pX * speedFactor;
+        if(speed.x > maxSpeed)
 			speed.x = maxSpeed;
 		if(speed.x < -maxSpeed)
 			speed.x = -maxSpeed;
 
-		speed.y += pY / dimi;
-		if(speed.y > maxSpeed)
+        speed.y += pY * speedFactor;
+        if(speed.y > maxSpeed)
 			speed.y = maxSpeed;
 		if(speed.y < -maxSpeed)
 			speed.y = -maxSpeed;
@@ -96,13 +101,8 @@ public class Ball {
 		setPosY(pos.y + speed.y);
 	}
 
-    /**
-     * Called when the player caught a ball
-     */
-    public void catchBall() {
-        // TODO: set 10 as a param
-        score += 10;
-        Log.d("Score", "Got a ball");
+    public void incrementScore(int gain) {
+        score += gain;
     }
 
     public int getScore() {

@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:defaultValue="0"
         android:entries="@array/pref_level_list_titles"
-        android:entryValues="@array/pref_level_list_titles"
+        android:entryValues="@array/pref_level_list_values"
         android:key="game_level"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
