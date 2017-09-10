@@ -38,7 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         init();
     }
 
-    private void init() {
+    public void init() {
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
         mPaint = new Paint();
@@ -103,8 +103,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             canvas = null;
             try {
                 canvas = mSurfaceHolder.lockCanvas();
-                synchronized (mSurfaceHolder) {
-                    update(canvas);
+                if (canvas != null) {
+                    synchronized (mSurfaceHolder) {
+                        update(canvas);
+                    }
                 }
             } finally {
                 if (canvas != null)
@@ -117,5 +119,4 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
         }
     }
-
 }

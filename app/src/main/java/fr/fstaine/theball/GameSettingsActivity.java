@@ -22,6 +22,8 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import fr.fstaine.theball.view.compat.AppCompatPreferenceActivity;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,

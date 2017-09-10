@@ -16,20 +16,24 @@ import fr.fstaine.theball.view.GameView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link GameFragment.OnFragmentInteractionListener} interface
+ * {@link GameFragment.OnGameFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link GameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GameFragment extends Fragment {
+public class GameFragment extends Fragment implements View.OnClickListener, GameEngine.OnGameEventListener {
 
     private static final String TAG = "GameFragment";
 
     private static final String ARG_GAME_DIFFICULTY = "gameDifficulty";
+
     OnGameFragmentInteractionListener mListener;
+
     GameEngine gameEngine;
+
     GameView gameView;
-    TextView mTextScore;
+    TextView mTextScore, mTextTimer;
+    View startLayout, gameLayout;
 
     public GameFragment() {
         // Required empty constructor
@@ -75,9 +79,14 @@ public class GameFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_game, container, false);
 
         mTextScore = root.findViewById(R.id.textScore);
+        mTextTimer = root.findViewById(R.id.textTimer);
         gameView = root.findViewById(R.id.gameView);
+        startLayout = root.findViewById(R.id.start_layout);
+        gameLayout = root.findViewById(R.id.game_layout);
 
-        gameEngine = new GameEngine(this, gameView.getBall(), gameView.getBonus());
+        startLayout.setOnClickListener(this);
+
+        gameEngine = new GameEngine(this, gameView);
 
         return root;
     }
@@ -85,8 +94,8 @@ public class GameFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        gameEngine.resume();
-        gameEngine.updateGameParams();
+        //gameEngine.resume();
+        //gameEngine.updateGameParams();
     }
 
     @Override
@@ -102,6 +111,33 @@ public class GameFragment extends Fragment {
                 mTextScore.setText("" + score);
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.start_layout:
+                launchGame();
+                break;
+        }
+    }
+
+    @Override
+    public void onTimerChanged(int msRemaining) {
+        mTextTimer.setText(String.format("%.1f", msRemaining / 1000f));
+    }
+
+    @Override
+    public void onGameEnd() {
+        startLayout.setVisibility(View.VISIBLE);
+        gameLayout.setVisibility(View.INVISIBLE);
+    }
+
+    public void launchGame() {
+        gameEngine = new GameEngine(this, gameView);
+        startLayout.setVisibility(View.INVISIBLE);
+        gameLayout.setVisibility(View.VISIBLE);
+        gameEngine.start();
     }
 
     public interface OnGameFragmentInteractionListener {
