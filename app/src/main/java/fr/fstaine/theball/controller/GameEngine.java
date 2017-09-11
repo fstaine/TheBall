@@ -94,8 +94,6 @@ public class GameEngine {
 
         mManager = (SensorManager) mContainer.getActivity().getBaseContext().getSystemService(Service.SENSOR_SERVICE);
         mAccelerometer = mManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        timerTask.execute(timer);
     }
 
     public void updateGameParams() {
@@ -116,16 +114,15 @@ public class GameEngine {
     }
 
     public void start() {
-        //mGameView.init();
         resetScore();
         mManager.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         mEventThread = new EventThread();
         mEventThread.start();
+        timerTask.execute(timer);
         Log.d(TAG, "Start game engine");
     }
 
 	public void stop() {
-        Log.d(TAG, "Stopping game engine...");
         mManager.unregisterListener(mSensorEventListener, mAccelerometer);
         mEventThread.continueRunning = false;
         try {
