@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import fr.fstaine.theball.GameFragment;
@@ -47,20 +48,20 @@ public class GameEngine {
         @Override
         protected Integer doInBackground(Integer... integers) {
             if (integers.length > 1) {
-                Log.d(TAG, "timerTask must be called with only one parameter");
+                Log.d(TAG, "TimerTask must be called with only one parameter");
             }
-            int seconds = integers[0];
-            while (seconds > 0) {
+            int msec = integers[0];
+            while (msec > 0) {
                 try {
-                    Thread.currentThread().sleep(100);
-                    seconds -= 100;
-                    publishProgress(seconds);
+                    Thread.sleep(100);
+                    msec -= 100;
+                    publishProgress(msec);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 if (isCancelled()) break;
             }
-            return seconds;
+            return msec;
         }
 
         @Override
@@ -79,7 +80,7 @@ public class GameEngine {
         }
     };
 
-    public GameEngine(GameFragment pView, GameView gameView) {
+    public GameEngine(@NonNull GameFragment pView, @NonNull GameView gameView) {
         if (pView instanceof OnGameEventListener) {
             mGameEventListener = pView;
         } else {
@@ -90,7 +91,7 @@ public class GameEngine {
         this.ball = gameView.getBall();
         this.bonus = gameView.getBonus();
 
-        updateGameParams();
+        // updateGameParams();
 
         mManager = (SensorManager) mContainer.getActivity().getBaseContext().getSystemService(Service.SENSOR_SERVICE);
         mAccelerometer = mManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -154,7 +155,7 @@ public class GameEngine {
         void onGameEnd(int playerScore);
     }
 
-    public final static class GameLevel {
+    public enum GameLevel {
         public final static int EASY = 0;
         public final static int MEDIUM = 1;
         public final static int HARD = 2;
@@ -171,7 +172,7 @@ public class GameEngine {
                 }
                 ball.update();
                 try {
-                    Thread.currentThread().sleep(20);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
