@@ -94,8 +94,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     @Override
     public void onResume() {
         super.onResume();
-        //gameEngine.resume();
-        //gameEngine.updateGameParams();
     }
 
     @Override
@@ -129,8 +127,9 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
 
     @Override
     public void onGameEnd() {
-        startLayout.setVisibility(View.VISIBLE);
-        gameLayout.setVisibility(View.INVISIBLE);
+        if (mListener != null) {
+            mListener.onGameEnd();
+        }
     }
 
     public void launchGame() {
@@ -152,5 +151,5 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
         void onBonusCaught(int reward);
         // ...
     }
-
+    
 }

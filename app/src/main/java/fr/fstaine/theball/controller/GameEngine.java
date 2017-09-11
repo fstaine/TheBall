@@ -16,16 +16,15 @@ import fr.fstaine.theball.physic.Bonus;
 import fr.fstaine.theball.view.GameView;
 
 public class GameEngine {
-
     private static final String TAG = "GameEngine";
-    private final GameView mGameView;
+
     private final Ball ball;
 	private final Bonus bonus;
     private GameFragment mContainer;
     private OnGameEventListener mGameEventListener;
     // TODO: Put reward in Bonus ?
     private int reward;
-    private int timer = 5000;
+    private int timer = 10000;
 
     private SensorManager mManager;
     private Sensor mAccelerometer;
@@ -88,7 +87,6 @@ public class GameEngine {
                     + " must implement " + OnGameEventListener.class);
         }
         this.mContainer = pView;
-        this.mGameView = gameView;
         this.ball = gameView.getBall();
         this.bonus = gameView.getBonus();
 

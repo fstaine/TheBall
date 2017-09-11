@@ -1,11 +1,30 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- base game text -->
+    <style name="GameFont" parent="@style/TextAppearance.AppCompat.Large">
+        <item name="android:textColor">#ff0000</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">casual</item>
+    </style>
+
+    <style name="GameFont.Big" parent="@style/GameFont">
+        <item name="android:textSize">100sp</item>
+    </style>
+
+    <style name="GameFont.Title" parent="@style/GameFont">
+        <item name="android:textSize">50sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="GameFont.Small" parent="@style/GameFont">
+        <item name="android:textSize">20sp</item>
     </style>
 
 </resources>
