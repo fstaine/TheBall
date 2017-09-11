@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import fr.fstaine.theball.controller.GameEngine;
+import fr.fstaine.theball.pref.AppPreferences;
 import fr.fstaine.theball.view.GameView;
 
 
@@ -22,7 +23,6 @@ import fr.fstaine.theball.view.GameView;
  * create an instance of this fragment.
  */
 public class GameFragment extends Fragment implements View.OnClickListener, GameEngine.OnGameEventListener {
-
     private static final String TAG = "GameFragment";
 
     private static final String ARG_GAME_DIFFICULTY = "gameDifficulty";
@@ -78,9 +78,9 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game, container, false);
 
-        mTextScore = root.findViewById(R.id.textScore);
-        mTextTimer = root.findViewById(R.id.textTimer);
-        gameView = root.findViewById(R.id.gameView);
+        mTextScore = root.findViewById(R.id.text_score);
+        mTextTimer = root.findViewById(R.id.text_timer);
+        gameView = root.findViewById(R.id.game_view);
         startLayout = root.findViewById(R.id.start_layout);
         gameLayout = root.findViewById(R.id.game_layout);
 
@@ -126,9 +126,10 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     }
 
     @Override
-    public void onGameEnd() {
+    public void onGameEnd(int playerScore) {
+        AppPreferences.updateHighScore(getContext(), playerScore);
         if (mListener != null) {
-            mListener.onGameEnd();
+            mListener.onGameEnd(playerScore);
         }
     }
 
@@ -146,10 +147,10 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
 
         void onGameResume();
 
-        void onGameEnd();
+        void onGameEnd(int playerScore);
 
         void onBonusCaught(int reward);
         // ...
     }
-    
+
 }

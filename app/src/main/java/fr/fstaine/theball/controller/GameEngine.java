@@ -133,7 +133,7 @@ public class GameEngine {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        mGameEventListener.onGameEnd();
+        mGameEventListener.onGameEnd(ball.getScore());
         Log.d(TAG, "Game engine stopped");
     }
 
@@ -141,12 +141,12 @@ public class GameEngine {
         return ball.getPosition().distance(bonus.getPosition()) < 2 * ball.getRadius();
     }
 
-    public void resetScore() {
+    private void resetScore() {
         ball.resetScore();
         mContainer.updateScore(ball.getScore());
     }
 
-    public void updateScore(int reward) {
+    private void updateScore(int reward) {
         ball.incrementScore(reward);
         mContainer.updateScore(ball.getScore());
     }
@@ -154,7 +154,7 @@ public class GameEngine {
     public interface OnGameEventListener {
         void onTimerChanged(int msRemaining);
 
-        void onGameEnd();
+        void onGameEnd(int playerScore);
     }
 
     public final static class GameLevel {

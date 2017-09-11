@@ -81,9 +81,8 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     }
 
     @Override
-    public void onGameEnd() {
-        Log.d(TAG, "Game ended... with score=" + 2); // TODO add score
-        Fragment scoreFragment = ScoreFragment.newInstance();
+    public void onGameEnd(int playerScore) {
+        Fragment scoreFragment = ScoreFragment.newInstance(playerScore);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.game_fragment_container, scoreFragment);
         transaction.addToBackStack(null);
