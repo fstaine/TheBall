@@ -3,16 +3,19 @@ package fr.fstaine.theball;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import fr.fstaine.theball.controller.GameEngine;
 
-public class GameActivity extends AppCompatActivity implements GameFragment.OnGameFragmentInteractionListener {
+public class GameActivity extends AppCompatActivity implements GameFragment.OnGameFragmentInteractionListener, ScoreFragment.OnScoreFragmentInteractionListener {
+    private static final String TAG = "GameActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +83,27 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
 
     @Override
     public void onGameEnd() {
-
+        Log.d(TAG, "Game ended... with score=" + 2); // TODO add score
+        Fragment scoreFragment = ScoreFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.game_fragment_container, scoreFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
     public void onBonusCaught(int reward) {
 
+    }
+
+    @Override
+    public void onStartGame() {
+        Log.d(TAG, "Restart a new game...");
+        Fragment gameFragment = GameFragment.newInstance(3); // TODO Berk
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.game_fragment_container, gameFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
     ////////////////////////////////
 }

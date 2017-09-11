@@ -1,0 +1,60 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameFragment$ScoreFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textScoreTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp"
+            android:text="Score:"
+            android:textAlignment="center"
+            android:textAppearance="@style/GameFont.Title" />
+
+        <TextView
+            android:id="@+id/textScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textScoreTitle"
+            android:text="0"
+            android:textAppearance="@style/GameFont.Title" />
+
+        <TextView
+            android:id="@+id/textBestScoresTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textScore"
+            android:text="Leaderboard:"
+            android:textAlignment="center"
+            android:textAppearance="@style/GameFont.Title" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@android:color/holo_blue_bright"
+            android:layout_below="@+id/textBestScoresTitle"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/btRestart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:text="Restart"
+            android:textAppearance="@style/GameFont.Title" />
+
+    </RelativeLayout>
+
+</FrameLayout>
