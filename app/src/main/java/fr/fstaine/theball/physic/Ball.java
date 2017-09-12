@@ -1,9 +1,5 @@
 package fr.fstaine.theball.physic;
 
-import android.util.Log;
-
-import static android.content.ContentValues.TAG;
-
 public class Ball {
 	private final int radius = 30;
 
@@ -101,14 +97,9 @@ public class Ball {
         if (speed.y < -maxSpeed)
             speed.y = -maxSpeed;
 
-        setPosX(pos.x + speed.x);
-        setPosY(pos.y + speed.y);
-    }
-
-    public void update() {
-        setPosX(pos.x + speed.x);
-        setPosY(pos.y + speed.y);
-        Log.d(TAG, "speed: " + speed.x + ", " + speed.y + " Th: " + Thread.currentThread().getId());
+		setPosX(pos.x + speed.x);
+		setPosY(pos.y + speed.y);
+		// Log.d(TAG, "speed: " + speed.x + ", " + speed.y + " Th: " + Thread.currentThread().getId());
     }
 
     public void resetScore() {

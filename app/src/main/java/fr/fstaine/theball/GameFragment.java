@@ -39,12 +39,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
         // Required empty constructor
     }
 
-    public static GameFragment newInstance(int difficulty) {
-        GameFragment fragment = new GameFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_GAME_DIFFICULTY, difficulty);
-        fragment.setArguments(args);
-        return fragment;
+    public static GameFragment newInstance() {
+        return new GameFragment();
     }
 
     @Override
@@ -65,16 +61,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int difficulty;
-        if (getArguments() != null) {
-            difficulty = getArguments().getInt(ARG_GAME_DIFFICULTY);
-        }
-        // setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game, container, false);
 
@@ -89,17 +75,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
         gameEngine = new GameEngine(this, gameView);
 
         return root;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        gameEngine.stop();
     }
 
     public void updateScore(final int score) {

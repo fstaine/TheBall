@@ -12,8 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import fr.fstaine.theball.pref.AppPreferences;
-
 public class GameActivity extends AppCompatActivity implements GameFragment.OnGameFragmentInteractionListener, ScoreFragment.OnScoreFragmentInteractionListener {
     private static final String TAG = "GameActivity";
 
@@ -28,7 +26,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Fragment gameFragment = GameFragment.newInstance(AppPreferences.getGameDifficulty(this));
+        Fragment gameFragment = GameFragment.newInstance();
 
         fragmentTransaction.add(R.id.game_fragment_container, gameFragment);
         fragmentTransaction.commit();
@@ -97,7 +95,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     @Override
     public void onStartGame() {
         Log.d(TAG, "Restart a new game...");
-        Fragment gameFragment = GameFragment.newInstance(AppPreferences.getGameDifficulty(this));
+        Fragment gameFragment = GameFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.game_fragment_container, gameFragment);
         transaction.addToBackStack(null);

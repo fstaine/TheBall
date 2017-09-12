@@ -1,19 +1,18 @@
 package fr.fstaine.theball.controller;
 
 import android.app.Service;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import fr.fstaine.theball.GameFragment;
 import fr.fstaine.theball.physic.Ball;
 import fr.fstaine.theball.physic.Bonus;
+import fr.fstaine.theball.pref.AppPreferences;
 import fr.fstaine.theball.view.GameView;
 
 public class GameEngine {
@@ -25,6 +24,10 @@ public class GameEngine {
     private OnGameEventListener mGameEventListener;
     // TODO: Put reward in Bonus ?
     private int reward;
+
+    /**
+     * Game duration, in milliseconds
+     */
     private int timer = 10000;
 
     private SensorManager mManager;
@@ -44,41 +47,7 @@ public class GameEngine {
 
     private EventThread mEventThread = new EventThread();
 
-    private AsyncTask<Integer, Integer, Integer> timerTask = new AsyncTask<Integer, Integer, Integer>() {
-        @Override
-        protected Integer doInBackground(Integer... integers) {
-            if (integers.length > 1) {
-                Log.d(TAG, "TimerTask must be called with only one parameter");
-            }
-            int msec = integers[0];
-            while (msec > 0) {
-                try {
-                    Thread.sleep(100);
-                    msec -= 100;
-                    publishProgress(msec);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (isCancelled()) break;
-            }
-            return msec;
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            stop();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            mGameEventListener.onTimerChanged(values[0]);
-        }
-
-        @Override
-        protected void onCancelled(Integer integer) {
-            super.onCancelled(integer);
-        }
-    };
+    private CountdownTask mCountdownTask = new CountdownTask(timer);
 
     public GameEngine(@NonNull GameFragment pView, @NonNull GameView gameView) {
         if (pView instanceof OnGameEventListener) {
@@ -91,15 +60,12 @@ public class GameEngine {
         this.ball = gameView.getBall();
         this.bonus = gameView.getBonus();
 
-        // updateGameParams();
-
         mManager = (SensorManager) mContainer.getActivity().getBaseContext().getSystemService(Service.SENSOR_SERVICE);
         mAccelerometer = mManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
     public void updateGameParams() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContainer.getContext());
-        int gameLevel = Integer.decode(sharedPref.getString("game_level", "0"));
+        int gameLevel = AppPreferences.getGameDifficulty(mContainer.getContext());
         Log.d(TAG, "Game level: " + gameLevel);
 
         if (gameLevel == GameLevel.EASY) {
@@ -115,11 +81,12 @@ public class GameEngine {
     }
 
     public void start() {
+        updateGameParams();
         resetScore();
         mManager.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         mEventThread = new EventThread();
         mEventThread.start();
-        timerTask.execute(timer);
+        mCountdownTask.execute();
         Log.d(TAG, "Start game engine");
     }
 
@@ -155,7 +122,7 @@ public class GameEngine {
         void onGameEnd(int playerScore);
     }
 
-    public enum GameLevel {
+    public class GameLevel {
         public final static int EASY = 0;
         public final static int MEDIUM = 1;
         public final static int HARD = 2;
@@ -170,13 +137,56 @@ public class GameEngine {
                     updateScore(reward);
                     bonus.setRandomPosition();
                 }
-                ball.update();
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private class CountdownTask extends AsyncTask<Void, Integer, Integer> {
+
+        private int mSec;
+
+        public CountdownTask(int mSec) {
+            this.mSec = mSec;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            while (mSec > 0) {
+                try {
+                    Thread.sleep(100);
+                    mSec -= 100;
+                    publishProgress(mSec);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (isCancelled()) break;
+            }
+            return mSec;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mGameEventListener.onTimerChanged(mSec);
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            stop();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            mGameEventListener.onTimerChanged(values[0]);
+        }
+
+        @Override
+        protected void onCancelled(Integer integer) {
+            super.onCancelled(integer);
         }
     }
 
