@@ -3,51 +3,75 @@ package fr.fstaine.theball.pref;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AppPreferences {
+
+    private final static int HIGH_SCORE_DEFAULT_VALUE = 0;
+    private final static int HIGH_SCORE_SIZE = 3;
+    private final static String HIGH_SCORE_SEPERATOR = ";";
 
     public static int getGameDifficulty(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return Integer.decode(sharedPref.getString("game_level", "0"));
     }
 
-    public static TreeSet<Integer> getHighScore(Context context) {
+    /**
+     * Get the highScores ordered from higher to lower
+     * @param context context in which to get the the highScores values
+     * @return a list of scores, in descending order
+     */
+    public static List<Integer> getHighScore(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        Set<String> highScoresStr = sharedPref.getStringSet("high_scores", getDefaultHighScores());
-        TreeSet<Integer> highScore = new TreeSet<>();
-        for (String s : highScoresStr) {
-            highScore.add(Integer.decode(s));
-        }
-        return highScore;
+        String highScoresStr = sharedPref.getString("high_scores", toHighScorePref(getDefaultHighScores()));
+        return toHighScoreValues(highScoresStr);
     }
 
     public static void updateHighScore(Context context, int newScore) {
-        TreeSet<Integer> highScore = getHighScore(context);
-        if (highScore.first() < newScore) {
-            TreeSet<Integer> newHighScore = new TreeSet<>();
-            newHighScore.addAll(highScore);
-            newHighScore.add(newScore);
-            while (newHighScore.size() > 3) {
-                newHighScore.pollFirst();
-            }
+        List<Integer> highScores = getHighScore(context);
+        Integer lower = highScores.get(highScores.size() - 1);
+        if (lower < newScore || highScores.size() < HIGH_SCORE_SIZE) {
+            highScores.add(newScore);
+            Collections.sort(highScores, Collections.<Integer>reverseOrder());
+            highScores.subList(HIGH_SCORE_SIZE, highScores.size()).clear();
+
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = sharedPref.edit();
-            TreeSet<String> newHighScoreStr = new TreeSet<>();
-            for (Integer i : newHighScore) {
-                newHighScoreStr.add(i.toString());
-            }
-            editor.putStringSet("high_scores", newHighScoreStr);
+            editor.putString("high_scores", toHighScorePref(highScores));
             editor.commit();
+            Log.d("HighScore", "" + highScores);
         }
     }
 
-    public static SortedSet<String> getDefaultHighScores() {
-        TreeSet<String> defaultHighScores = new TreeSet<>();
-        defaultHighScores.add("0");
+    public static List<Integer> getDefaultHighScores() {
+        List<Integer> defaultHighScores = new ArrayList<>();
+        for (int i=0; i<HIGH_SCORE_SIZE; i++) {
+            defaultHighScores.add(HIGH_SCORE_DEFAULT_VALUE);
+        }
         return defaultHighScores;
+    }
+
+    private static String toHighScorePref(List<Integer> highScores) {
+        StringBuilder builder = new StringBuilder();
+        for (Integer i : highScores) {
+            builder.append(i.toString());
+            builder.append(HIGH_SCORE_SEPERATOR);
+        }
+        return builder.toString();
+    }
+
+    private static List<Integer> toHighScoreValues(String str) {
+        String[] strList = str.split(HIGH_SCORE_SEPERATOR);
+        List<Integer> highScores = new ArrayList<>(HIGH_SCORE_SIZE);
+        for (String s : strList) {
+            Log.d("STR", s);
+            Integer highScore = Integer.decode(s);
+            highScores.add(highScore);
+        }
+        return highScores;
     }
 }
