@@ -47,7 +47,15 @@ public class AppPreferences {
         }
     }
 
-    public static List<Integer> getDefaultHighScores() {
+    public static void resetHighScores(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("high_scores", toHighScorePref(getDefaultHighScores()));
+        editor.commit();
+        Log.d("HighScore", "Reset high scores...");
+    }
+
+    private static List<Integer> getDefaultHighScores() {
         List<Integer> defaultHighScores = new ArrayList<>();
         for (int i=0; i<HIGH_SCORE_SIZE; i++) {
             defaultHighScores.add(HIGH_SCORE_DEFAULT_VALUE);

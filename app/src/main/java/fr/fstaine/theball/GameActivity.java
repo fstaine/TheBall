@@ -1,7 +1,6 @@
 package fr.fstaine.theball;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import fr.fstaine.theball.pref.AppPreferences;
 
 public class GameActivity extends AppCompatActivity implements GameFragment.OnGameFragmentInteractionListener, ScoreFragment.OnScoreFragmentInteractionListener {
     private static final String TAG = "GameActivity";
@@ -52,13 +53,10 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent intent = new Intent(getApplicationContext(), GameSettingsActivity.class);
-                startActivity(intent);
-                return true;
+            case R.id.action_reset_scores:
+                AppPreferences.resetHighScores(this);
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
