@@ -1,7 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TheBall</string>
+    <string name="app_name" translatable="false">TheBall</string>
     <string name="title_activity_game_settings">Settings</string>
 
+    <string name="pref_header_general">General</string>
+    <string name="pref_ringtone_silent">Silent</string>
     <string name="pref_title_level">Difficulty</string>
     <string name="done">Done</string>
     <string name="leader_board_title">Leader board:</string>
@@ -12,9 +15,9 @@
     <string name="hard">Hard</string>
     <string name="reset_high_scores">Reset high scores</string>
     <string-array name="pref_level_list_titles">
-        <item>Slow</item>
-        <item>Standard</item>
-        <item>Fast</item>
+        <item>@string/easy</item>
+        <item>@string/medium</item>
+        <item>@string/hard</item>
     </string-array>
     <string-array name="pref_level_list_values">
         <item>0</item>
