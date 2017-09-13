@@ -2,8 +2,8 @@
 <resources>
     <color name="colorDarkBackground">#000000</color>
     <color name="colorLightBackground">#ffffff</color>
-    <color name="colorButtonPrimary">#888888</color>
+    <color name="colorButtonPrimary">#555555</color>
 
-    <color name="colorPrimary">#ff0000</color>
+    <color name="colorContentPrimary">#ff0000</color>
 
 </resources>
