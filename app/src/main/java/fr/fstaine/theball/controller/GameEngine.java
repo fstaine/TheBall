@@ -12,7 +12,6 @@ import android.util.Log;
 import fr.fstaine.theball.GameFragment;
 import fr.fstaine.theball.physic.Ball;
 import fr.fstaine.theball.physic.Bonus;
-import fr.fstaine.theball.pref.AppPreferences;
 import fr.fstaine.theball.view.GameView;
 
 public class GameEngine {
@@ -64,14 +63,11 @@ public class GameEngine {
         mAccelerometer = mManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
-    public void updateGameParams() {
-        int gameLevel = AppPreferences.getGameDifficulty(mContainer.getContext());
-        Log.d(TAG, "Game level: " + gameLevel);
-
-        if (gameLevel == GameLevel.EASY) {
+    public void updateGameParams(int difficulty) {
+        if (difficulty == GameLevel.EASY) {
             reward = 10;
             ball.setParams(0.25f, 10f, 0.1f);
-        } else if (gameLevel == GameLevel.MEDIUM) {
+        } else if (difficulty == GameLevel.MEDIUM) {
             reward = 10;
             ball.setParams(0.2f, 20f, 0.2f);
         } else {
@@ -80,8 +76,8 @@ public class GameEngine {
         }
     }
 
-    public void start() {
-        updateGameParams();
+    public void start(int difficulty) {
+        updateGameParams(difficulty);
         resetScore();
         mManager.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         mEventThread = new EventThread();

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import fr.fstaine.theball.controller.GameEngine;
@@ -70,7 +71,13 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
         startLayout = root.findViewById(R.id.start_layout);
         gameLayout = root.findViewById(R.id.game_layout);
 
-        startLayout.setOnClickListener(this);
+        Button btEasy = root.findViewById(R.id.bt_easy);
+        Button btMedium = root.findViewById(R.id.bt_medium);
+        Button btHard = root.findViewById(R.id.bt_hard);
+
+        btEasy.setOnClickListener(this);
+        btMedium.setOnClickListener(this);
+        btHard.setOnClickListener(this);
 
         gameEngine = new GameEngine(this, gameView);
 
@@ -81,7 +88,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTextScore.setText("" + score);
+                mTextScore.setText(Integer.toString(score));
             }
         });
     }
@@ -89,8 +96,14 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.start_layout:
-                launchGame();
+            case R.id.bt_easy:
+                launchGame(GameEngine.GameLevel.EASY);
+                break;
+            case R.id.bt_medium:
+                launchGame(GameEngine.GameLevel.MEDIUM);
+                break;
+            case R.id.bt_hard:
+                launchGame(GameEngine.GameLevel.HARD);
                 break;
         }
     }
@@ -108,11 +121,11 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
         }
     }
 
-    public void launchGame() {
+    public void launchGame(int difficulty) {
         gameEngine = new GameEngine(this, gameView);
         startLayout.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.VISIBLE);
-        gameEngine.start();
+        gameEngine.start(difficulty);
     }
 
     public interface OnGameFragmentInteractionListener {
