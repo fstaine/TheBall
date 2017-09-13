@@ -129,15 +129,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     }
 
     public interface OnGameFragmentInteractionListener {
-        void onGameStart();
-
-        void onGamePause();
-
-        void onGameResume();
-
         void onGameEnd(int playerScore);
-
-        void onBonusCaught(int reward);
         // ...
     }
 

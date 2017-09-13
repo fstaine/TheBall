@@ -8,8 +8,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import fr.fstaine.theball.pref.AppPreferences;
 
@@ -34,17 +38,6 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        // Fragment call ?
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.game_menu, menu);
         return true;
@@ -54,26 +47,10 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_reset_scores:
-                AppPreferences.resetHighScores(this);
-            default:
-                return super.onOptionsItemSelected(item);
+                resetHighScores();
+                break;
         }
-    }
-
-    //////////////////////////////
-    @Override
-    public void onGameStart() {
-
-    }
-
-    @Override
-    public void onGamePause() {
-
-    }
-
-    @Override
-    public void onGameResume() {
-
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -86,11 +63,6 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     }
 
     @Override
-    public void onBonusCaught(int reward) {
-
-    }
-
-    @Override
     public void onStartGame() {
         Log.d(TAG, "Restart a new game...");
         Fragment gameFragment = GameFragment.newInstance();
@@ -99,5 +71,16 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
         transaction.addToBackStack(null);
         transaction.commit();
     }
-    ////////////////////////////////
+
+    private void resetHighScores() {
+        // TODO: update view if in score menu
+        AppPreferences.resetHighScores(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_check_icon,
+                (ViewGroup) findViewById(R.id.toast_container));
+        Toast toast = new Toast(this);
+        toast.setView(layout);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
 }
