@@ -11,6 +11,6 @@
 
     <item
         android:id="@+id/action_reset_scores"
-        android:title="Reset High scores"
+        android:title="@string/reset_high_scores"
         app:showAsAction="never" />
 </menu>

@@ -92,7 +92,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 			try {
 				mThread.join();
 				retry = false;
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+                e.printStackTrace();}
 		}
 	}
 
@@ -116,6 +117,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

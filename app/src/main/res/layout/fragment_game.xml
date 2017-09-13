@@ -51,7 +51,7 @@
             android:layout_above="@+id/bt_medium"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="69dp"
-            android:text="Easy"
+            android:text="@string/easy"
             android:background="@color/colorButtonPrimary"
             android:textAppearance="@style/GameFont.Title" />
 
@@ -59,7 +59,7 @@
             android:id="@+id/bt_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium"
+            android:text="@string/medium"
             android:background="@color/colorButtonPrimary"
             android:textAppearance="@style/GameFont.Title"
             android:layout_centerVertical="true"
@@ -72,7 +72,7 @@
             android:layout_below="@+id/bt_medium"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="69dp"
-            android:text="Hard"
+            android:text="@string/hard"
             android:background="@color/colorButtonPrimary"
             android:textAppearance="@style/GameFont.Title" />
 

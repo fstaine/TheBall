@@ -75,7 +75,7 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
             textScore.setText(Integer.toString(score));
         }
 
-        mListHighScore = root.findViewById(R.id.list_highscore);
+        mListHighScore = root.findViewById(R.id.list_high_score);
 
         final List<Integer> highScores = new ArrayList<>(AppPreferences.getHighScore(getContext()));
         Collections.sort(highScores, Collections.<Integer>reverseOrder());
@@ -87,11 +87,6 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
         mListHighScore.setAdapter(adapter);
 
         return root;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override

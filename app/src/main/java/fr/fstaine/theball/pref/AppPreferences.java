@@ -13,7 +13,7 @@ public class AppPreferences {
 
     private final static int HIGH_SCORE_DEFAULT_VALUE = 0;
     private final static int HIGH_SCORE_SIZE = 3;
-    private final static String HIGH_SCORE_SEPERATOR = ";";
+    private final static String HIGH_SCORE_SEPARATOR = ";";
 
     public static int getGameDifficulty(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -67,13 +67,13 @@ public class AppPreferences {
         StringBuilder builder = new StringBuilder();
         for (Integer i : highScores) {
             builder.append(i.toString());
-            builder.append(HIGH_SCORE_SEPERATOR);
+            builder.append(HIGH_SCORE_SEPARATOR);
         }
         return builder.toString();
     }
 
     private static List<Integer> toHighScoreValues(String str) {
-        String[] strList = str.split(HIGH_SCORE_SEPERATOR);
+        String[] strList = str.split(HIGH_SCORE_SEPARATOR);
         List<Integer> highScores = new ArrayList<>(HIGH_SCORE_SIZE);
         for (String s : strList) {
             Log.d("STR", s);

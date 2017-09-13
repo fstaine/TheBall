@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Score:"
+            android:text="@string/score_title"
             android:textAlignment="center"
             android:textAppearance="@style/GameFont.Title" />
 
@@ -32,12 +32,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/text_score"
-            android:text="Leaderboard:"
+            android:text="@string/leader_board_title"
             android:textAlignment="center"
             android:textAppearance="@style/GameFont.Title" />
 
         <ListView
-            android:id="@+id/list_highscore"
+            android:id="@+id/list_high_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_best_scores_title"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:text="Restart"
+            android:text="@string/restart"
             android:background="@color/colorButtonPrimary"
             android:textAppearance="@style/GameFont.Title" />
 

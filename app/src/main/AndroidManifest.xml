@@ -20,7 +20,7 @@
         <activity
             android:name=".GameSettingsActivity"
             android:label="@string/title_activity_game_settings"
-            android:theme="@style/Theme.AppCompat"></activity>
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>
