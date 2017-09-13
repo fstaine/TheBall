@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:alpha="0.2"
             android:textAlignment="center"
             android:textAppearance="@style/GameFont.Big" />
 
