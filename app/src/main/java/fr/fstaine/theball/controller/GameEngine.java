@@ -29,6 +29,8 @@ public class GameEngine {
      */
     private int timer = 10000;
 
+    private int difficulty = GameLevel.EASY;
+
     private SensorManager mManager;
     private Sensor mAccelerometer;
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
@@ -64,6 +66,7 @@ public class GameEngine {
     }
 
     public void updateGameParams(int difficulty) {
+        this.difficulty = difficulty;
         if (difficulty == GameLevel.EASY) {
             reward = 10;
             ball.setParams(0.25f, 10f, 0.1f);
@@ -94,7 +97,7 @@ public class GameEngine {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        mGameEventListener.onGameEnd(ball.getScore());
+        mGameEventListener.onGameEnd(ball.getScore(), difficulty);
         Log.d(TAG, "Game engine stopped");
     }
 
@@ -115,7 +118,7 @@ public class GameEngine {
     public interface OnGameEventListener {
         void onTimerChanged(int msRemaining);
 
-        void onGameEnd(int playerScore);
+        void onGameEnd(int playerScore, int difficulty);
     }
 
     public class GameLevel {

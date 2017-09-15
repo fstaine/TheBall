@@ -3,17 +3,22 @@ package fr.fstaine.theball.pref;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AppPreferences {
+import fr.fstaine.theball.controller.GameEngine;
 
-    private final static int HIGH_SCORE_DEFAULT_VALUE = 0;
+public class AppPreferences {
     private final static int HIGH_SCORE_SIZE = 3;
+
     private final static String HIGH_SCORE_SEPARATOR = ";";
+    private final static String ELEMENT_SEPARATOR = ",";
+
+    private final static HighScore HIGH_SCORE_DEFAULT_VALUE = new HighScore(0, GameEngine.GameLevel.EASY);
 
     public static int getGameDifficulty(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -25,18 +30,19 @@ public class AppPreferences {
      * @param context context in which to get the the highScores values
      * @return a list of scores, in descending order
      */
-    public static List<Integer> getHighScore(Context context) {
+    public static List<HighScore> getHighScore(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String highScoresStr = sharedPref.getString("high_scores", toHighScorePref(getDefaultHighScores()));
         return toHighScoreValues(highScoresStr);
     }
 
-    public static void updateHighScore(Context context, int newScore) {
-        List<Integer> highScores = getHighScore(context);
-        Integer lower = highScores.get(highScores.size() - 1);
-        if (lower < newScore || highScores.size() < HIGH_SCORE_SIZE) {
-            highScores.add(newScore);
-            Collections.sort(highScores, Collections.<Integer>reverseOrder());
+    public static void updateHighScore(Context context, int newScore, int difficulty) {
+        List<HighScore> highScores = getHighScore(context);
+        HighScore newHighScore = new HighScore(newScore, difficulty);
+        HighScore lowerHighScore = highScores.get(highScores.size() - 1);
+        if (lowerHighScore.compareTo(newHighScore) < 0|| highScores.size() < HIGH_SCORE_SIZE) {
+            highScores.add(newHighScore);
+            Collections.sort(highScores, Collections.<HighScore>reverseOrder());
             highScores.subList(HIGH_SCORE_SIZE, highScores.size()).clear();
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -55,31 +61,92 @@ public class AppPreferences {
         Log.d("HighScore", "Reset high scores...");
     }
 
-    private static List<Integer> getDefaultHighScores() {
-        List<Integer> defaultHighScores = new ArrayList<>();
+    private static List<HighScore> getDefaultHighScores() {
+        List<HighScore> defaultHighScores = new ArrayList<>();
         for (int i=0; i<HIGH_SCORE_SIZE; i++) {
             defaultHighScores.add(HIGH_SCORE_DEFAULT_VALUE);
         }
         return defaultHighScores;
     }
 
-    private static String toHighScorePref(List<Integer> highScores) {
+    private static String toHighScorePref(List<HighScore> highScores) {
         StringBuilder builder = new StringBuilder();
-        for (Integer i : highScores) {
+        for (HighScore i : highScores) {
             builder.append(i.toString());
             builder.append(HIGH_SCORE_SEPARATOR);
         }
         return builder.toString();
     }
 
-    private static List<Integer> toHighScoreValues(String str) {
+    private static List<HighScore> toHighScoreValues(String str) {
         String[] strList = str.split(HIGH_SCORE_SEPARATOR);
-        List<Integer> highScores = new ArrayList<>(HIGH_SCORE_SIZE);
+        List<HighScore> highScores = new ArrayList<>(HIGH_SCORE_SIZE);
         for (String s : strList) {
-            Log.d("STR", s);
-            Integer highScore = Integer.decode(s);
-            highScores.add(highScore);
+            highScores.add(HighScore.decode(s));
         }
         return highScores;
+    }
+
+    public static class HighScore implements Comparable<HighScore> {
+        int score, difficulty;
+
+        public HighScore(int score, int difficulty) {
+            this.score = score;
+            this.difficulty = difficulty;
+        }
+
+        private HighScore(int score) {
+            this.score = score;
+            this.difficulty = GameEngine.GameLevel.EASY;
+        }
+
+        private HighScore() {
+            this.score = 0;
+            this.difficulty = GameEngine.GameLevel.EASY;
+        }
+
+        public int getScore() {
+            return this.score;
+        }
+
+        public int getDifficulty() {
+            return this.difficulty;
+        }
+
+        @Override
+        public int compareTo(@NonNull HighScore highScore) {
+            int order1 = this.getScore() - highScore.getScore();
+            if (order1 != 0) {
+                return order1;
+            } else {
+                return this.getDifficulty() - highScore.getDifficulty();
+            }
+        }
+
+        @Override
+        public String toString() {
+            return Integer.toString(getScore()) + ELEMENT_SEPARATOR + Integer.toString(getDifficulty());
+        }
+
+        public static HighScore decode(String str) {
+            String[] elems = str.split(ELEMENT_SEPARATOR);
+            try {
+                if (elems.length < 2) {
+                    Log.e("HighScore", "Incorrect number of elements in: " + str);
+                    if (elems.length == 1) {
+                        int score = Integer.decode(elems[0]);
+                        return new HighScore(score);
+                    } else {
+                        return new HighScore();
+                    }
+                }
+                int score = Integer.decode(elems[0]);
+                int difficulty = Integer.decode(elems[1]);
+                return new HighScore(score, difficulty);
+            } catch (NumberFormatException e) {
+                Log.e("HighScore", e.getMessage());
+                return new HighScore();
+            }
+        }
     }
 }

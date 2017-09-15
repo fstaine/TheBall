@@ -114,8 +114,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     }
 
     @Override
-    public void onGameEnd(int playerScore) {
-        AppPreferences.updateHighScore(getContext(), playerScore);
+    public void onGameEnd(int playerScore, int difficulty) {
+        AppPreferences.updateHighScore(getContext(), playerScore, difficulty);
         if (mListener != null) {
             mListener.onGameEnd(playerScore);
         }

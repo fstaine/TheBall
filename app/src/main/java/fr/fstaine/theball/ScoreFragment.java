@@ -12,9 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import fr.fstaine.theball.controller.GameEngine;
 import fr.fstaine.theball.pref.AppPreferences;
 
 
@@ -77,11 +77,23 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
 
         mListHighScore = root.findViewById(R.id.list_high_score);
 
-        final List<Integer> highScores = new ArrayList<>(AppPreferences.getHighScore(getContext()));
-        Collections.sort(highScores, Collections.<Integer>reverseOrder());
+        final List<AppPreferences.HighScore> highScores = new ArrayList<>(AppPreferences.getHighScore(getContext()));
         final List<String> highScoresStr = new ArrayList<>();
-        for (Integer i : highScores) {
-            highScoresStr.add(Integer.toString(i));
+        for (AppPreferences.HighScore highScore : highScores) {
+            int score = highScore.getScore();
+            int difficulty = highScore.getDifficulty();
+            String difficultyStr;
+            switch (difficulty) {
+                case GameEngine.GameLevel.MEDIUM:
+                    difficultyStr = getResources().getString(R.string.medium);
+                    break;
+                case GameEngine.GameLevel.HARD:
+                    difficultyStr = getResources().getString(R.string.hard);
+                    break;
+                default:
+                    difficultyStr = getResources().getString(R.string.easy);
+            }
+            highScoresStr.add(highScore.getScore() + " - " + difficultyStr);
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(root.getContext(), R.layout.list_item_highscore, highScoresStr);
         mListHighScore.setAdapter(adapter);
