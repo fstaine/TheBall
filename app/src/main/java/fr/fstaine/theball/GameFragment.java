@@ -117,7 +117,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     public void onGameEnd(int playerScore, int difficulty) {
         AppPreferences.updateHighScore(getContext(), playerScore, difficulty);
         if (mListener != null) {
-            mListener.onGameEnd(playerScore);
+            mListener.onGameEnd(playerScore, difficulty);
         }
     }
 
@@ -129,7 +129,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Game
     }
 
     public interface OnGameFragmentInteractionListener {
-        void onGameEnd(int playerScore);
+        void onGameEnd(int playerScore, int difficulty);
         // ...
     }
 

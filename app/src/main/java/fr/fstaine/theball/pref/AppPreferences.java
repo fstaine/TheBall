@@ -49,7 +49,7 @@ public class AppPreferences {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("high_scores", toHighScorePref(highScores));
             // TODO: check if it doesn't cause problem when highScores are showed in the next view
-            editor.apply();
+            editor.commit();
             Log.d("HighScore", "" + highScores);
         }
     }
@@ -58,13 +58,13 @@ public class AppPreferences {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("high_scores", toHighScorePref(getDefaultHighScores()));
-        editor.apply();
+        // TODO: check if it doesn't cause problem when highScores are showed in the next view
+        editor.commit();
         Log.d("HighScore", "Reset high scores...");
     }
 
     private static List<HighScore> getDefaultHighScores() {
-        List<HighScore> defaultHighScores = new ArrayList<>();
-        return defaultHighScores;
+        return new ArrayList<>();
     }
 
     private static String toHighScorePref(List<HighScore> highScores) {

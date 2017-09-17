@@ -54,8 +54,8 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     }
 
     @Override
-    public void onGameEnd(int playerScore) {
-        Fragment scoreFragment = ScoreFragment.newInstance(playerScore);
+    public void onGameEnd(int playerScore, int difficulty) {
+        Fragment scoreFragment = ScoreFragment.newInstance(playerScore, difficulty);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.game_fragment_container, scoreFragment, "fragment_score");
         transaction.commit();
@@ -74,6 +74,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
         AppPreferences.resetHighScores(this);
         ScoreFragment scoreFragment = (ScoreFragment) getSupportFragmentManager().findFragmentByTag("fragment_score");
         if (scoreFragment != null) {
+            AppPreferences.updateHighScore(this, scoreFragment.getScore(), scoreFragment.getDifficulty());
             scoreFragment.fillHighScores();
         } else{
             LayoutInflater inflater = getLayoutInflater();

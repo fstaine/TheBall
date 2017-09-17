@@ -22,20 +22,25 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "ScoreFragment";
 
     private static final String ARG_PREV_SCORE = "PrevScore";
+    private static final String ARG_PREV_DIFFICULTY = "PrevDifficulty";
 
     private OnScoreFragmentInteractionListener mListener;
 
     private Button mBtRestart;
     private ListView mListHighScore;
 
+    private int mScore;
+    private int mDifficulty;
+
     public ScoreFragment() {
         // Required empty public constructor
     }
 
-    public static ScoreFragment newInstance(int prevScore) {
+    public static ScoreFragment newInstance(int prevScore, int difficulty) {
         ScoreFragment fragment = new ScoreFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PREV_SCORE, prevScore);
+        args.putInt(ARG_PREV_DIFFICULTY, difficulty);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,8 +76,9 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
 
         if (getArguments() != null) {
             TextView textScore = root.findViewById(R.id.text_score);
-            int score = getArguments().getInt(ARG_PREV_SCORE);
-            textScore.setText(Integer.toString(score));
+            mScore = getArguments().getInt(ARG_PREV_SCORE);
+            mDifficulty = getArguments().getInt(ARG_PREV_DIFFICULTY);
+            textScore.setText(Integer.toString(mScore));
         }
 
         mListHighScore = root.findViewById(R.id.list_high_score);
@@ -103,6 +109,14 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.list_item_highscore, highScoresStr);
         mListHighScore.setAdapter(adapter);
+    }
+
+    public int getScore() {
+        return mScore;
+    }
+
+    public int getDifficulty() {
+        return mDifficulty;
     }
 
     @Override
