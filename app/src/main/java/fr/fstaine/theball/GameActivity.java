@@ -57,8 +57,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
     public void onGameEnd(int playerScore) {
         Fragment scoreFragment = ScoreFragment.newInstance(playerScore);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.game_fragment_container, scoreFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.game_fragment_container, scoreFragment, "fragment_score");
         transaction.commit();
     }
 
@@ -68,19 +67,22 @@ public class GameActivity extends AppCompatActivity implements GameFragment.OnGa
         Fragment gameFragment = GameFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.game_fragment_container, gameFragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
     private void resetHighScores() {
-        // TODO: update view if in score menu
         AppPreferences.resetHighScores(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.toast_check_icon,
-                (ViewGroup) findViewById(R.id.toast_container));
-        Toast toast = new Toast(this);
-        toast.setView(layout);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.show();
+        ScoreFragment scoreFragment = (ScoreFragment) getSupportFragmentManager().findFragmentByTag("fragment_score");
+        if (scoreFragment != null) {
+            scoreFragment.fillHighScores();
+        } else{
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_check_icon,
+                    (ViewGroup) findViewById(R.id.toast_container));
+            Toast toast = new Toast(this);
+            toast.setView(layout);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }

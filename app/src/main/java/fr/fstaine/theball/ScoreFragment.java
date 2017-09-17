@@ -77,6 +77,12 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
 
         mListHighScore = root.findViewById(R.id.list_high_score);
 
+        fillHighScores();
+
+        return root;
+    }
+
+    public void fillHighScores() {
         final List<AppPreferences.HighScore> highScores = new ArrayList<>(AppPreferences.getHighScore(getContext()));
         final List<String> highScoresStr = new ArrayList<>();
         for (AppPreferences.HighScore highScore : highScores) {
@@ -93,12 +99,10 @@ public class ScoreFragment extends Fragment implements View.OnClickListener {
                 default:
                     difficultyStr = getResources().getString(R.string.easy);
             }
-            highScoresStr.add(highScore.getScore() + " - " + difficultyStr);
+            highScoresStr.add(Integer.toString(score) + " - " + difficultyStr);
         }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(root.getContext(), R.layout.list_item_highscore, highScoresStr);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.list_item_highscore, highScoresStr);
         mListHighScore.setAdapter(adapter);
-
-        return root;
     }
 
     @Override
