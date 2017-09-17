@@ -39,16 +39,17 @@ public class AppPreferences {
     public static void updateHighScore(Context context, int newScore, int difficulty) {
         List<HighScore> highScores = getHighScore(context);
         HighScore newHighScore = new HighScore(newScore, difficulty);
-        HighScore lowerHighScore = highScores.get(highScores.size() - 1);
-        if (lowerHighScore.compareTo(newHighScore) < 0|| highScores.size() < HIGH_SCORE_SIZE) {
+        if (highScores.size() < HIGH_SCORE_SIZE || highScores.get(highScores.size() - 1).compareTo(newHighScore) < 0) {
             highScores.add(newHighScore);
             Collections.sort(highScores, Collections.<HighScore>reverseOrder());
-            highScores.subList(HIGH_SCORE_SIZE, highScores.size()).clear();
-
+            if (highScores.size() > HIGH_SCORE_SIZE) {
+                highScores.subList(HIGH_SCORE_SIZE, highScores.size()).clear();
+            }
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("high_scores", toHighScorePref(highScores));
-            editor.commit();
+            // TODO: check if it doesn't cause problem when highScores are showed in the next view
+            editor.apply();
             Log.d("HighScore", "" + highScores);
         }
     }
@@ -57,15 +58,12 @@ public class AppPreferences {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("high_scores", toHighScorePref(getDefaultHighScores()));
-        editor.commit();
+        editor.apply();
         Log.d("HighScore", "Reset high scores...");
     }
 
     private static List<HighScore> getDefaultHighScores() {
         List<HighScore> defaultHighScores = new ArrayList<>();
-        for (int i=0; i<HIGH_SCORE_SIZE; i++) {
-            defaultHighScores.add(HIGH_SCORE_DEFAULT_VALUE);
-        }
         return defaultHighScores;
     }
 
@@ -82,7 +80,9 @@ public class AppPreferences {
         String[] strList = str.split(HIGH_SCORE_SEPARATOR);
         List<HighScore> highScores = new ArrayList<>(HIGH_SCORE_SIZE);
         for (String s : strList) {
-            highScores.add(HighScore.decode(s));
+            if (!s.isEmpty()) {
+                highScores.add(HighScore.decode(s));
+            }
         }
         return highScores;
     }
