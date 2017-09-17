@@ -67,16 +67,26 @@ public class GameEngine {
 
     public void updateGameParams(int difficulty) {
         this.difficulty = difficulty;
+        float speedFactor;
+        float maxSpeed;
+        float bounceReduction;
         if (difficulty == GameLevel.EASY) {
             reward = 10;
-            ball.setParams(0.25f, 10f, 0.1f);
+            speedFactor = 0.28f;
+            maxSpeed = 6;
+            bounceReduction = 0.6f;
         } else if (difficulty == GameLevel.MEDIUM) {
             reward = 10;
-            ball.setParams(0.2f, 20f, 0.2f);
-        } else {
+            speedFactor = 0.2f;
+            maxSpeed = 10f;
+            bounceReduction = 0.25f;
+        } else { // GameLevel.HARD
             reward = 10;
-            ball.setParams(0.20f, 40f, 0.4f);
+            speedFactor = 0.20f;
+            maxSpeed = 40f;
+            bounceReduction = 0.3f;
         }
+        ball.setParams(speedFactor, maxSpeed, bounceReduction);
     }
 
     public void start(int difficulty) {
